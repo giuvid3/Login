@@ -116,14 +116,14 @@
         <form class="posizione" >
             <h1 style="color: white;">Login</h1>
             <label  style=" color: white;">Username:</label>
-            <input type="text" class="text">
+            <input type="text" class="text" id="user">
             <label style="color: white;">Password:</label>
             <div class="linea">
                 <input type="password" class="ps" id="psd">
                 <input type="checkbox" class="psw" onclick="psd.type = this.
                 checked ? 'text' : 'password'">                      
             </div>            
-            <button type="button" onclick="alert('Login eseguito con successo!')"> Sign in</button>
+            <button type="button" onclick="alert('Login eseguito con successo!') ; document.getElementById('user').value='' ; document.getElementById('psd').value='' "> Sign in</button>
         </form>
     </div>
 </body>    

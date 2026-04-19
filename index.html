@@ -120,10 +120,10 @@
             <label style="color: white;">Password:</label>
             <div class="linea">
                 <input type="password" class="ps" id="psd" placeholder="password di almeno 8 caratteri">
-                <input type="checkbox" class="psw" onclick="psd.type = this.
+                <input type="checkbox" class="psw" id="check" onclick="psd.type = this.
                 checked ? 'text' : 'password'">                      
             </div>            
-            <button type="button" onclick="alert('Login eseguito con successo!') ; document.getElementById('user').value='' ; document.getElementById('psd').value='' "> Sign in</button>
+            <button type="button" onclick="alert('Login eseguito con successo!') ; document.getElementById('user').value='' ; document.getElementById('psd').value='' ; document.getElementById('check').checked = false "> Sign in</button>
         </form>
     </div>
 </body>    

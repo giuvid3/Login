@@ -3,12 +3,12 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url(starfall.gif);
+    background-image: url(../img/starfall.gif);
     background-position: center;
     background-size: cover;
     }          
                         
-    .login{
+    .signup , .signin{
     display: flex;
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.75);
     overflow: hidden;               
@@ -102,4 +102,15 @@ body{
     align-items: center;
     position: relative;
     
+    }
+
+    .signup{
+        display: none;
+    }
+
+
+    .change{
+        position: absolute;
+        align-self: flex-end;
+        width: 100px;
     }

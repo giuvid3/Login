@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Note</title>
+    <link rel="stylesheet" href="../stile/stile.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+
+
+<body class="bnote">
+    <div class="note-header">
+        <h1 class="titolonote">Le mie Note 📝</h1>
+        <div class="pulsanti">
+            <button id="add-note-btn" class="bottoni note" onclick="aggiunginota()">Aggiungi Nota</button>
+            <button id="logout-btn" class="bottoni note" onclick="esc()">Logout</button>
+        </div>   
+        <div id="lista-note" class="lista-note-container"></div>
+            
+    </div>
+    
+    <div class="container" style="display: none;">       
+        <form class="note-form" onsubmit="event.preventDefault(); salvaNota();">
+            <h1 class="titolonote" id="form-title">Aggiungi Nuova Nota</h1>
+            <input type="text" id="note-title" placeholder="Titolo della nota..." required>
+            <textarea id="note-content" placeholder="Scrivi il tuo testo qui..." rows="12" required></textarea>
+            <div class="pulsanti">
+                <button type="submit" id="save-btn" class="bottoni note">Salva Nota</button>
+                <button type="button" id="update-btn" class="bottoni note" style="display: none;" onclick="salvaNota()">Modifica Nota</button>
+                <button type="button" id="back-btn" class="bottoni note" onclick="chiudiFormETornaIndietro()">Annulla</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+
+<script>
+
+    const url = "https://fiovymslucehxexbjova.supabase.co"; 
+    const key = "sb_publishable_BBZeXm0AcLW1_xFME64ucg_C4rRb5qx";
+
+    const supabasecl = supabase.createClient(url, key);
+    
+    let idNotaInModifica = null;  //variabile per tenere id della nota in modifica
+
+    window.onload = function() {
+        mostraNoteUtente();
+    };
+
+    async function salvaNota() {
+        const titolo = document.getElementById('note-title').value;
+        const contenuto = document.getElementById('note-content').value;
+
+        // estrae id utante loggato
+        const { data: { session } } = await supabasecl.auth.getSession();
+        const utenteLoggatoId = session ? session.user.id : null;
+
+        if (idNotaInModifica){
+            const { error } = await supabasecl
+                .from('Note')
+                .update({ title: titolo, content: contenuto })
+                .eq('id', idNotaInModifica);
+
+            if (error) {
+                alert("Errore nella modifica della nota: " + error.message);
+            } else {
+                alert("Nota modificata con successo!");
+                idNotaInModifica = null;
+                document.getElementById('note-title').value = '';
+                document.getElementById('note-content').value = '';
+                chiudiFormETornaIndietro();
+                mostraNoteUtente();
+            }
+            return;    
+        }else{
+            const { error } = await supabasecl   //{ error } restituisce solo se c'è un errore, altrimenti restituisce null   
+                .from('Note') 
+                .insert([
+                    { 
+                        title: titolo, 
+                        content: contenuto, 
+                        user_id: utenteLoggatoId 
+                    }
+                ]);
+
+            if (error) {
+                alert("Errore nel salvataggio: " + error.message);
+            } else {
+                alert("Nota salvata con successo!");
+                
+                document.getElementById('note-title').value = '';
+                document.getElementById('note-content').value = '';
+                
+                chiudiFormETornaIndietro();
+                mostraNoteUtente();
+            }    
+        }
+        
+    }
+
+    async function mostraNoteUtente() {
+        const contenitoreLista = document.getElementById('lista-note');
+
+        const { data: elencoNote, error } = await supabasecl
+            .from('Note')
+            .select('*')
+            .order('id', { ascending: false }); // ordina le note dalla più recente
+
+        if (error) {
+            contenitoreLista.innerHTML = "<p style='color:red; font-weight:bold;'>Errore Database: " + error.message + "</p>";
+            return;
+        }
+
+        if (!elencoNote || elencoNote.length === 0) {
+            contenitoreLista.innerHTML = "<p style='color:white; font-style:italic;'>Non hai ancora scritto nessuna nota. Clicca su 'Aggiungi Nota' per iniziare!</p>";
+            return;
+        }
+
+        contenitoreLista.innerHTML = "";
+
+        elencoNote.forEach(nota => {
+            const scheda = document.createElement('div');
+            scheda.className = 'scheda-nota-singola'; 
+            
+            scheda.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; width: 100%;">
+                    <h3 style="color: black; margin: 0; font-size: 27px;">${nota.title}</h3>    
+                    <div style="display: flex; gap: 20px; align-items: center;">
+                        <button class="btn-modifica" onclick="modificaNota('${nota.id}')">✏️</button>
+                        <button class="btn-elimina" onclick="eliminaNota('${nota.id}')">❌</button>                    
+                    </div>
+
+                </div>
+                <p style="color: white; margin: 0; font-size: 14px; white-space: pre-wrap;">${nota.content}</p>
+            `;
+            
+            contenitoreLista.appendChild(scheda);
+        });
+    }
+
+    async function eliminaNota(idNota) {
+        const conferma = confirm("Vuoi davvero eliminare questa nota per sempre?");
+        if (!conferma) return;
+
+        const { error } = await supabasecl
+            .from('Note')
+            .delete()
+            .eq('id', idNota);
+
+        if (error) {
+            alert("Errore durante l'eliminazione: " + error.message);
+        } else {
+            alert("Nota eliminata con successo!");
+            mostraNoteUtente();
+        }
+    }
+    
+    async function modificaNota(idNota) {
+        const { data: nota, error } = await supabasecl
+            .from('Note')
+            .select('*')
+            .eq('id', idNota)
+            .single();
+        
+        if (error) {
+            alert("Errore nel recupero della nota: " + error.message);
+            return;
+        }
+        
+        idNotaInModifica = nota.id;
+
+        document.getElementById('form-title').innerText = "Modifica Nota";
+        document.getElementById('save-btn').style.display = "none";
+        document.getElementById('update-btn').style.display = "inline-block";
+
+        document.getElementById('note-title').value = nota.title;
+        document.getElementById('note-content').value = nota.content;
+
+        document.querySelector('.container').style.display = 'flex';
+        document.querySelector('.note-header').style.display = 'none';
+    }
+
+    async function esc(){
+        await supabasecl.auth.signOut();
+        window.location.href = "../index.html";
+    }
+    
+    function chiudiFormETornaIndietro() {
+        document.querySelector('.container').style.display = 'none';
+        document.querySelector('.note-header').style.display = 'block';
+    }
+
+    function aggiunginota(){        
+        document.querySelector('.container').style.display = 'flex';
+        document.querySelector('.note-header').style.display = 'none';
+    }
+</script>
+
+</html>

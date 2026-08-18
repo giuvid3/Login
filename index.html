@@ -1,65 +1,115 @@
 <!DOCTYPE html>
 <html > 
 <head> 
-    <title>Login</title>
+    <title>Signup</title>
     <link rel="stylesheet" href="stile/stile.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
-<body lazyload="true" style="display: flex;">
+<body class="index" lazyload="true" style="display: flex;">
     <div class="signin">        
-        <form class="posizione" onsubmit="return lenpassword()">
-            <button type="button" class="change" onclick="signinup()">Sign up</button>
-            <h1 style="color: white;">Login</h1>
-            <label  style=" color: white;">Username:</label>
-            <input type="email" class="text" id="user" placeholder="Mail" required>
-            <label style="color: white;">Password:</label>
+        <form class="dati" onsubmit="accesso(event)">
+            <button type="button" class="change bottoni" onclick="signinup()">Sign up</button>
+            <h1 class="titlecenter">Login</h1>
+            <label class="campi">Username:</label>
+            <input type="email" class="text" id="userin" placeholder="Mail"  autocomplete="email" required>
+            <label class="campi">Password:</label>
             <div class="linea">
                 <input type="password" class="ps" id="psd" placeholder="Inserisci la password del tuo account" required>
                 <input type="checkbox" class="psw" id="check" onclick="checkpsw()">                      
             </div>            
-            <button type="submit" > Sign in</button>
+            <button class="bottoni" type="submit" > Sign in</button>
         </form>
     </div>
 
 
     <div class="signup">
-        <form class="posizione" onsubmit="return lenpassword()">
-            <button type="button" class="change" onclick="signinup()">Sign in</button>
-            <h1 style="color: white;">Sign Up</h1>
-            <label  style=" color: white;">Username:</label>
-            <input type="email" class="text" id="user" placeholder="Mail" required>
-            <label style="color: white;">Password:</label>
+        <form class="dati" onsubmit="registrazione(event)">
+            <button type="button" class="change bottoni" onclick="signinup()">Sign in</button>
+            <h1 class="titlecenter">Sign Up</h1>
+            <label class="campi">Username:</label>
+            <input type="email" class="text" id="userup" placeholder="Mail"  autocomplete="email" required>
+            <label class="campi">Password:</label>
             <div class="linea">
                 <input type="password" class="ps" id="psd1" placeholder="Password di almeno 8 caratteri" required>
                 <input type="checkbox" class="psw" id="check1" onclick="checkpsw()">                      
             </div>            
-            <button type="submit">Create Account</button>
+            <button class="bottoni" type="submit">Create Account</button>
         </form>
     </div>
 </body>
 
 <script>
-    function signinup() {
-        if (document.querySelector('.signup').style.display === 'flex') {
-            document.querySelector('.signup').style.display = 'none';
-            document.querySelector('.signin').style.display = 'flex';
+
+    const url = "https://fiovymslucehxexbjova.supabase.co"; 
+    const key = "sb_publishable_BBZeXm0AcLW1_xFME64ucg_C4rRb5qx";
+
+    const supabasecl = supabase.createClient(url, key);
+
+    async function registrazione(event) {
+        event.preventDefault();  /*non ricarica la pagina*/
+        const email = document.getElementById('userup').value;
+        const password = document.getElementById('psd1').value;
+
+        if (document.getElementById('psd1').value.length <8){
+            alert('La password deve essere di almeno 8 caratteri');
+            return false;
+        }
+        const {data, error} = await supabasecl.auth.signUp({
+            email: email,
+            password: password,
+        });
+
+        if (error) {
+            alert('Errore durante la registrazione: ' + error.message);
         } else {
-            document.querySelector('.signup').style.display = 'flex';
-            document.querySelector('.signin').style.display = 'none';
+            alert('Registrazione avvenuta con successo! Controlla la tua email per confermare l\'account.');
+            signinup();
+            svuotacampi();
         }
     }
 
-    function lenpassword(){
-        if (document.getElementById('psd').value.length <8){
-            alert('La password deve essere di almeno 8 caratteri');
-            return false;       //return fa solo eseguire la funzione e nient'altro
-        }else{
-            alert('Login eseguito con successo!');
-            document.getElementById('user').value='';
-            document.getElementById('psd').value='';
-            document.getElementById('check').checked = false;
+    async function accesso(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('userin').value;
+        const password = document.getElementById('psd').value;
+
+        const {data, error} = await supabasecl.auth.signInWithPassword({
+            email: email,
+            password: password,
+        });
+
+        if (error) {
+            alert('Errore durante il login: ' + error.message);
+        } else {
+            alert('Login avvenuto con successo!');
+            window.location.href = "pagine/note.html";
         }
     }
+
+    function signinup() {
+        if (document.querySelector('.signup').style.display === 'flex') {
+            document.querySelector('.signup').style.display = 'none';
+            document.querySelector('.signin').style.display = 'flex';            
+            document.title = "Login";
+
+        } else {
+            document.querySelector('.signup').style.display = 'flex';
+            document.querySelector('.signin').style.display = 'none';
+            document.title = "Signup";
+        }
+    }
+
+    function svuotacampi(){
+        document.getElementById('userin').value='';
+        document.getElementById('userup').value='';
+        document.getElementById('psd').value='';
+        document.getElementById('psd1').value='';
+        document.getElementById('check').checked = false;
+        document.getElementById('check1').checked = false;
+    }
+    
     function checkpsw(){
         if (document.getElementById('check').checked ||document.getElementById('check1').checked) {
             document.getElementById('psd').type = 'text';

@@ -1,0 +1,239 @@
+    .index{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../img/starfall.gif);
+    background-position: center;
+    background-size: cover;
+    }          
+                        
+    .signup , .signin{
+    display: flex;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.75);
+    overflow: hidden;               
+    border: 1px solid rgba(0, 0, 0, 0.500);
+    width: 500px;
+    height: 600px;
+    border-radius: 20px;     
+    }
+
+    .dati {
+    display:block;
+    box-sizing: border-box;
+    backdrop-filter: blur(2px) brightness(0.6);
+    height: 100%;
+    width: 100%;
+    padding: 40px;
+    flex-direction: column;
+    display:flex;
+    gap: 10px;
+    }
+    .titlecenter{
+    text-align: center;
+    font-size: 45px;
+    text-transform: uppercase;
+    text-shadow: 0px 0px 20px rgb(0,0,0,0.75);
+    margin-top: 65px;
+    color: white;
+    }
+
+    .campi{
+    text-transform: uppercase;
+    font-size: 11px;
+    padding-left: 10px;
+    color: white;
+    }
+
+    .text{
+    all: unset;
+    height: 38px;        
+    border-radius: 18px;
+    border: 2px solid transparent;
+    background-color: rgb(255, 255, 255, 0.3);
+    font-size: 19PX;
+    padding-left: 10px;
+    transition: border .25s ease-in-out;
+    }
+
+    .ps{
+    all: unset;
+    height: 38px; 
+    width: 430px;       
+    border-radius: 18px;
+    border: 2px solid transparent;
+    background-color: rgb(255, 255, 255, 0.3);
+    font-size: 19PX;
+    padding-left: 10px;
+    transition: border .25s ease-in-out;
+    }
+
+    .bottoni{
+    border-radius: 18px;
+    border-color: rgb(0, 162, 255);
+    height: 35px;
+    background-color: rgb(0, 162, 255);
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer; 
+    margin-top: 10px;       
+    }
+    input:focus{
+        border-color: rgb(0, 162, 255);
+    }
+    
+    .psw {
+    display: flex;
+    position: absolute;
+    right: 5px; 
+    width: 24px;
+    height: 24px;
+    appearance: none;        
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 2px solid rgb(0, 162, 255);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;        
+    }
+
+    .psw:checked {
+    background-color: rgba(0, 162, 255, 0.7);
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.6) inset;
+    }               
+
+    .linea{
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    
+    }
+
+    .signup{
+        display: none;
+    }
+
+
+    .change{
+        position: absolute;
+        align-self: flex-end;
+        width: 100px;
+    }
+
+
+
+/* scheda note*/
+
+    .bnote{
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        background-image: url(../img/starfall.gif);
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        backdrop-filter: blur(5px) brightness(0.8);
+        padding-bottom: 30px;
+        margin: 0;
+    }
+
+    .titolonote{
+        color: white;
+        font-size: 45px;
+    }
+
+    .pulsanti{
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-bottom: 20px;
+    }
+
+    .bottoni.note{
+        width: 170px;
+        height: 40px;
+    }
+
+    .container{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 600px; 
+        align-items: center;
+        gap: 20px;
+    }
+
+    .note-form{
+        display: flex;
+        height: 100vh;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .note-form input,.note-form textarea {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius:18px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        border: 2px solid transparent;
+    }
+    
+    .note-form input:focus,.note-form textarea:focus {
+        border-color: rgb(0, 162, 255);
+        outline: none;
+    }
+
+
+
+.lista-note-container {
+    width: 1500px;
+    max-width: 95%;
+    margin: 30px auto 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px; 
+    text-align: left;
+    
+}
+
+.scheda-nota-singola {
+    width: 360px;
+    min-height: 150px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+.scheda-nota-singola:hover {
+    transform: translateY(-5px);
+    border-color: rgb(0, 162, 255);
+}
+
+
+
+.btn-elimina, .btn-modifica {
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 5px;
+    opacity: 0.6;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-elimina:hover, .btn-modifica:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
